@@ -1,0 +1,53 @@
+public class Main { 
+    public static void main(String args[]){
+        //제네릭 지원 전 컬렉션 선언 방법(Java9 동작 가능)
+        //Stamp 인스턴스만 취급한다.
+        private final Collection stamps = ...;
+
+        //실수로 동전을 넣는다.
+        stamps.add(new Coin(...));
+
+        //컬렉션에서 이 동전을 다시 꺼내기 전에는 오류를 알아채지 못한다.
+        for(Integer i = stamps.iterator(); i.hasNext();){
+            Stamp stamp = (Stamp) i.next();
+            stamp.cancle();
+        }
+
+        //제네릭 사용 시 
+        private final Collection<Stamp> stamps = ...;
+
+        //unsafeAdd 메서드가 로 타입을 사용
+        List<String> strings = new ArrayList<>();
+        //unstaeAdd 메서드가 로 타입(List)을 사용
+        unsafeAdd(strings, Integer.valueOf(42)); 
+        String s = strings.get(0);//컴파일러가 자동으로 형변환 코드를 넣어준다.
+
+        //이대로 실행 시 string.get(0)의 결과를 형변환하려 할 때 ClassCaseException 던진다.
+        //Integer -> String 변환을 시도 (컴파일러가 자동으로 만들어 주었지만 경고를 무시하면 에러난다.)
+
+        //로 타입을 써도 좋은 예 - instanceof 연산자
+        if(o instanceof Set){//로 타입
+            Set<?> s = (Set<?>) o;// 와일드카드 타입
+        }
+        //1. o의 타입이 Set임을 확인
+        //2. 와일드카드 타입인 Set<?>로 형변
+        //검사 형변환이므로 컴파일러 경고 x
+
+
+    }
+    //private static void unsafeAdd(List list, Object o){
+    private Static void unsafeAdd(List<String> list, Object o){   
+        list.add(o);
+    }
+    //모르는 타입의 원소도 받는 로타입을 사용했다.
+    //static int numElementsInComoon(Set s1, Set s2){
+    static int numElementsInComoon(Set<?> s1, Set<?> s2){
+        int result = 0;
+        for(Object o1 : s1){
+            if(s2.contains(o1)){
+                result ++;
+            }
+            return result;
+        }
+    }
+}
